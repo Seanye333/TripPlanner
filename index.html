@@ -6,8 +6,13 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Trip Planner">
-    <title>Wanderly - Your Trip Planner</title>
+    <title>Wanderly - Collaborative Trip Planner</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
     <style>
         :root {
             --primary: #FF6B35;
@@ -21,7 +26,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on iOS */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -33,13 +38,12 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Touch-friendly buttons */
         button, .cta-button, .day-tab, .add-activity-btn, .edit-activity-btn {
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-            touch-action: manipulation; /* Improves tap response */
-            min-height: 44px; /* iOS recommended minimum touch target */
+            touch-action: manipulation;
+            min-height: 44px;
         }
 
         input, select, textarea {
@@ -183,10 +187,86 @@
             width: 100%;
         }
 
-        /* Features Section */
-        .features {
+        /* Share Section */
+        .share-section {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .share-section h4 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .share-link {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .share-link input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px;
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .copy-btn {
+            padding: 12px 30px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #003d71;
+            transform: translateY(-2px);
+        }
+
+        .sync-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 25px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+        }
+
+        .sync-status.syncing {
+            background: var(--accent);
+            display: block;
+        }
+
+        .sync-status.synced {
+            background: #4CAF50;
+            display: block;
+        }
+
+        /* Planner Section */
+        .planner-section {
             padding: 120px 50px;
-            max-width: 1400px;
+            background: linear-gradient(135deg, var(--secondary) 0%, #003d71 100%);
+            color: white;
+        }
+
+        .planner-container {
+            max-width: 900px;
             margin: 0 auto;
         }
 
@@ -198,71 +278,62 @@
             color: var(--secondary);
         }
 
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
+        .form-group {
+            margin-bottom: 30px;
         }
 
-        .feature-card {
-            background: white;
-            padding: 50px 40px;
-            border-radius: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
         }
 
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
             width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-        }
-
-        .feature-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .feature-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-
-        .feature-card h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            margin-bottom: 15px;
-            color: var(--secondary);
-        }
-
-        .feature-card p {
+            padding: 18px 25px;
             font-size: 1.1rem;
-            line-height: 1.8;
-            color: #666;
+            border: none;
+            border-radius: 15px;
+            font-family: 'Outfit', sans-serif;
+            background: rgba(255,255,255,0.95);
+            transition: all 0.3s;
         }
 
-        /* Trip Planner Form */
-        .planner-section {
-            padding: 120px 50px;
-            background: linear-gradient(135deg, var(--secondary) 0%, #003d71 100%);
-            color: white;
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255,107,53,0.3);
+            transform: scale(1.02);
         }
 
-        .planner-container {
-            max-width: 900px;
-            margin: 0 auto;
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: var(--accent);
+            color: var(--dark);
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(247,184,1,0.4);
         }
 
         /* Itinerary Builder */
@@ -462,64 +533,6 @@
             50% { background: #FFE8E0; }
         }
 
-        .form-group {
-            margin-bottom: 30px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 18px 25px;
-            font-size: 1.1rem;
-            border: none;
-            border-radius: 15px;
-            font-family: 'Outfit', sans-serif;
-            background: rgba(255,255,255,0.95);
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(255,107,53,0.3);
-            transform: scale(1.02);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 20px;
-            font-size: 1.3rem;
-            font-weight: 600;
-            background: var(--accent);
-            color: var(--dark);
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 20px;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(247,184,1,0.4);
-        }
-
         /* Trip Results */
         .trip-results {
             padding: 120px 50px;
@@ -638,84 +651,6 @@
             font-size: 1.2rem;
         }
 
-        /* Destinations Gallery */
-        .destinations {
-            padding: 120px 50px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .destinations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 60px;
-        }
-
-        .destination-card {
-            position: relative;
-            height: 400px;
-            border-radius: 25px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.4s ease;
-        }
-
-        .destination-card:hover {
-            transform: scale(1.05);
-        }
-
-        .destination-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%);
-            z-index: 1;
-        }
-
-        .destination-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .destination-info {
-            position: absolute;
-            bottom: 30px;
-            left: 30px;
-            z-index: 2;
-            color: white;
-        }
-
-        .destination-info h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .destination-info p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--dark);
-            color: white;
-            padding: 60px 50px 30px;
-            text-align: center;
-        }
-
-        footer .logo {
-            color: white;
-            margin-bottom: 20px;
-        }
-
-        footer p {
-            opacity: 0.7;
-            margin-top: 20px;
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             .hero h1 { 
@@ -730,10 +665,7 @@
                 font-size: 2rem; 
                 margin-bottom: 40px;
             }
-            .form-row { 
-                grid-template-columns: 1fr; 
-            }
-            .input-row { 
+            .form-row, .input-row { 
                 grid-template-columns: 1fr; 
             }
             nav ul { 
@@ -746,30 +678,8 @@
             .logo {
                 font-size: 1.5rem;
             }
-            .features, .planner-section, .itinerary-builder, 
-            .trip-results, .destinations {
+            .planner-section, .itinerary-builder, .trip-results {
                 padding: 60px 20px;
-            }
-            .features-grid {
-                grid-template-columns: 1fr;
-                gap: 25px;
-            }
-            .feature-card {
-                padding: 30px 25px;
-            }
-            .feature-card h3 {
-                font-size: 1.5rem;
-            }
-            .destinations-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            .destination-card {
-                height: 300px;
-            }
-            .cta-button {
-                padding: 15px 35px;
-                font-size: 1rem;
             }
             .trip-summary {
                 padding: 30px 20px;
@@ -835,6 +745,12 @@
             .builder-actions .cta-button {
                 width: 100%;
             }
+            .share-link {
+                flex-direction: column;
+            }
+            .share-link input {
+                min-width: 100%;
+            }
         }
 
         @media (max-width: 480px) {
@@ -854,20 +770,16 @@
             }
             .form-group input,
             .form-group select,
-            .form-group textarea {
-                font-size: 16px; /* Prevents zoom on iOS */
-            }
+            .form-group textarea,
             .activity-inputs input,
             .activity-inputs textarea {
-                font-size: 16px; /* Prevents zoom on iOS */
+                font-size: 16px;
             }
         }
 
-        /* iOS specific fixes */
         @supports (-webkit-touch-callout: none) {
-            /* iOS Safari */
             input, textarea, select {
-                font-size: 16px !important; /* Prevents auto-zoom */
+                font-size: 16px !important;
             }
             .hero {
                 min-height: 100vh;
@@ -875,27 +787,22 @@
             }
         }
 
-        /* Print Styles */
         @media print {
-            nav, .hero, .features, .planner-section, .itinerary-builder, 
-            .destinations, footer, .cta-button, .builder-actions {
+            nav, .hero, .planner-section, .itinerary-builder, 
+            footer, .cta-button, .builder-actions, .share-section, .sync-status {
                 display: none !important;
             }
-
             .trip-results {
                 padding: 20px !important;
             }
-
             .section-title {
                 color: black !important;
             }
-
             .trip-summary, .day-card {
                 break-inside: avoid;
                 box-shadow: none !important;
                 border: 1px solid #ddd;
             }
-
             body {
                 background: white !important;
             }
@@ -903,15 +810,16 @@
     </style>
 </head>
 <body>
+    <!-- Sync Status Indicator -->
+    <div class="sync-status" id="syncStatus">✓ Synced</div>
+
     <!-- Navigation -->
     <nav>
         <div class="container">
             <div class="logo">Wanderly</div>
             <ul>
-                <li><a href="#features">Features</a></li>
                 <li><a href="#planner">Plan Trip</a></li>
-                <li><a href="#destinations">Destinations</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#" onclick="loadMyTrips()">My Trips</a></li>
             </ul>
         </div>
     </nav>
@@ -920,47 +828,10 @@
     <section class="hero">
         <div class="hero-content">
             <h1>Wanderly</h1>
-            <p>Your journey begins with a single click</p>
+            <p>Collaborative trip planning made easy</p>
             <button class="cta-button" onclick="document.getElementById('planner').scrollIntoView({behavior: 'smooth'})">
-                Start Planning
+                Start Planning Together
             </button>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <h2 class="section-title">Why Choose Wanderly?</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🗺️</div>
-                <h3>Smart Itineraries</h3>
-                <p>AI-powered trip planning that creates personalized itineraries based on your interests, budget, and travel style.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">💰</div>
-                <h3>Budget Tracking</h3>
-                <p>Keep track of all expenses in real-time. Set budgets and get alerts when you're approaching your limit.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🏨</div>
-                <h3>Hotel & Flight Booking</h3>
-                <p>Compare prices across hundreds of providers and book the best deals directly through our platform.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📱</div>
-                <h3>Mobile App</h3>
-                <p>Access your trip plans offline. Get real-time updates and navigate even without internet connection.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🤝</div>
-                <h3>Collaborative Planning</h3>
-                <p>Plan trips with friends and family. Vote on activities, share ideas, and coordinate schedules effortlessly.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">⭐</div>
-                <h3>Local Recommendations</h3>
-                <p>Discover hidden gems recommended by locals and verified travelers who've been there.</p>
-            </div>
         </div>
     </section>
 
@@ -1023,6 +894,16 @@
         <div class="builder-container">
             <h2 class="section-title">Build Your Itinerary</h2>
             
+            <!-- Share Section -->
+            <div class="share-section" id="shareSection" style="display: none;">
+                <h4>🔗 Share this trip with others!</h4>
+                <p>Anyone with this link can view and edit this trip</p>
+                <div class="share-link">
+                    <input type="text" id="shareLink" readonly>
+                    <button class="copy-btn" onclick="copyShareLink()">📋 Copy Link</button>
+                </div>
+            </div>
+
             <div class="trip-summary-small" id="tripSummarySmall"></div>
 
             <div class="days-selector" id="daysSelector"></div>
@@ -1049,6 +930,16 @@
     <section class="trip-results" id="results" style="display: none;">
         <div class="results-container">
             <h2 class="section-title">Your Trip Plan</h2>
+            
+            <!-- Share Section in Results -->
+            <div class="share-section">
+                <h4>🔗 Share this trip</h4>
+                <div class="share-link">
+                    <input type="text" id="shareLink2" readonly>
+                    <button class="copy-btn" onclick="copyShareLink()">📋 Copy Link</button>
+                </div>
+            </div>
+
             <div id="tripPlan"></div>
             <div style="text-align: center;">
                 <button class="cta-button" onclick="editItinerary()" style="margin-top: 40px; margin-right: 15px;">
@@ -1057,76 +948,148 @@
                 <button class="cta-button" onclick="printItinerary()" style="margin-top: 40px; margin-right: 15px; background: var(--secondary);">
                     🖨️ Print / Save PDF
                 </button>
-                <button class="cta-button" onclick="document.getElementById('planner').scrollIntoView({behavior: 'smooth'})" style="margin-top: 40px; background: #95a5a6;">
+                <button class="cta-button" onclick="location.reload()" style="margin-top: 40px; background: #95a5a6;">
                     Plan Another Trip
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- Destinations Gallery -->
-    <section class="destinations" id="destinations">
-        <h2 class="section-title">Popular Destinations</h2>
-        <div class="destinations-grid">
-            <div class="destination-card">
-                <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800" alt="Paris" class="destination-img">
-                <div class="destination-info">
-                    <h3>Paris, France</h3>
-                    <p>The City of Light</p>
-                </div>
-            </div>
-            <div class="destination-card">
-                <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800" alt="Bali" class="destination-img">
-                <div class="destination-info">
-                    <h3>Bali, Indonesia</h3>
-                    <p>Tropical Paradise</p>
-                </div>
-            </div>
-            <div class="destination-card">
-                <img src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800" alt="Tokyo" class="destination-img">
-                <div class="destination-info">
-                    <h3>Tokyo, Japan</h3>
-                    <p>Ancient Meets Modern</p>
-                </div>
-            </div>
-            <div class="destination-card">
-                <img src="https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?w=800" alt="Santorini" class="destination-img">
-                <div class="destination-info">
-                    <h3>Santorini, Greece</h3>
-                    <p>Island Dreams</p>
-                </div>
-            </div>
-            <div class="destination-card">
-                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800" alt="Iceland" class="destination-img">
-                <div class="destination-info">
-                    <h3>Reykjavik, Iceland</h3>
-                    <p>Land of Fire & Ice</p>
-                </div>
-            </div>
-            <div class="destination-card">
-                <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800" alt="Dubai" class="destination-img">
-                <div class="destination-info">
-                    <h3>Dubai, UAE</h3>
-                    <p>Luxury Redefined</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer id="contact">
-        <div class="logo">Wanderly</div>
-        <p>Making travel planning effortless since 2024</p>
-        <p>© 2024 Wanderly. All rights reserved.</p>
-    </footer>
-
     <script>
-        // Global variables
+        // ===========================================
+        // FIREBASE CONFIGURATION
+        // ===========================================
+        // TODO: Replace this with YOUR Firebase config from Firebase Console
+        const firebaseConfig = {
+        apiKey: "AIzaSyAXSvUTxNYGvTdsvVM3Zd0bL5IPfCut-es",
+        authDomain: "trip-planner-fa576.firebaseapp.com",
+        projectId: "trip-planner-fa576",
+        storageBucket: "trip-planner-fa576.firebasestorage.app",
+        messagingSenderId: "973006856885",
+        appId: "1:973006856885:web:b7c44e911280b6ef3bd4fc",
+        measurementId: "G-KHYJPVL2QB"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // ===========================================
+        // GLOBAL VARIABLES
+        // ===========================================
         let tripData = {};
         let currentDay = 1;
         let itineraryData = {};
+        let currentTripId = null;
+        let unsubscribe = null;
 
-        // Form submission
+        // ===========================================
+        // FIREBASE FUNCTIONS
+        // ===========================================
+
+        function showSyncStatus(status) {
+            const syncEl = document.getElementById('syncStatus');
+            syncEl.className = 'sync-status ' + status;
+            syncEl.textContent = status === 'syncing' ? '↻ Saving...' : '✓ Synced';
+            
+            if (status === 'synced') {
+                setTimeout(() => {
+                    syncEl.style.display = 'none';
+                }, 2000);
+            }
+        }
+
+        async function saveTripToFirebase() {
+            if (!currentTripId) {
+                currentTripId = db.collection('trips').doc().id;
+            }
+
+            showSyncStatus('syncing');
+
+            try {
+                await db.collection('trips').doc(currentTripId).set({
+                    tripData: tripData,
+                    itineraryData: itineraryData,
+                    lastModified: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+
+                showSyncStatus('synced');
+                updateShareLink();
+            } catch (error) {
+                console.error('Error saving:', error);
+                alert('Error saving trip. Check console.');
+            }
+        }
+
+        function listenToTripChanges() {
+            if (!currentTripId) return;
+
+            if (unsubscribe) {
+                unsubscribe();
+            }
+
+            unsubscribe = db.collection('trips').doc(currentTripId)
+                .onSnapshot((doc) => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        tripData = data.tripData;
+                        itineraryData = data.itineraryData;
+                        renderDayEditor();
+                        showSyncStatus('synced');
+                    }
+                });
+        }
+
+        async function loadTripFromFirebase(tripId) {
+            try {
+                const doc = await db.collection('trips').doc(tripId).get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    tripData = data.tripData;
+                    itineraryData = data.itineraryData;
+                    currentTripId = tripId;
+                    
+                    initializeBuilder();
+                    document.getElementById('builder').style.display = 'block';
+                    document.getElementById('builder').scrollIntoView({ behavior: 'smooth' });
+                    
+                    listenToTripChanges();
+                } else {
+                    alert('Trip not found!');
+                }
+            } catch (error) {
+                console.error('Error loading trip:', error);
+                alert('Error loading trip. Check console.');
+            }
+        }
+
+        function updateShareLink() {
+            const url = window.location.origin + window.location.pathname + '?trip=' + currentTripId;
+            document.getElementById('shareLink').value = url;
+            document.getElementById('shareLink2').value = url;
+            document.getElementById('shareSection').style.display = 'block';
+        }
+
+        function copyShareLink() {
+            const linkInput = document.getElementById('shareLink').value || document.getElementById('shareLink2').value;
+            navigator.clipboard.writeText(linkInput).then(() => {
+                alert('Link copied! Share it with others to collaborate.');
+            });
+        }
+
+        // Check if URL has trip ID
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tripId = urlParams.get('trip');
+            if (tripId) {
+                loadTripFromFirebase(tripId);
+            }
+        });
+
+        // ===========================================
+        // FORM AND UI FUNCTIONS
+        // ===========================================
+
         document.getElementById('tripForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -1137,12 +1100,10 @@
             const budget = document.getElementById('budget').value;
             const notes = document.getElementById('notes').value;
             
-            // Calculate trip duration
             const start = new Date(startDate);
             const end = new Date(endDate);
             const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
             
-            // Store trip data
             tripData = {
                 destination,
                 startDate,
@@ -1153,20 +1114,20 @@
                 notes
             };
 
-            // Initialize itinerary data
             itineraryData = {};
             for (let i = 1; i <= days; i++) {
                 itineraryData[i] = [];
             }
             
-            // Show builder
             initializeBuilder();
+            saveTripToFirebase();
+            listenToTripChanges();
+            
             document.getElementById('builder').style.display = 'block';
             document.getElementById('builder').scrollIntoView({ behavior: 'smooth' });
         });
 
         function initializeBuilder() {
-            // Display trip summary
             const budgetLabels = {
                 'budget': 'Budget-Friendly',
                 'moderate': 'Moderate',
@@ -1179,7 +1140,6 @@
                 <p>${new Date(tripData.startDate).toLocaleDateString()} - ${new Date(tripData.endDate).toLocaleDateString()} | ${tripData.days} days | ${tripData.travelers} travelers | ${budgetLabels[tripData.budget]}</p>
             `;
 
-            // Create day tabs
             let tabsHTML = '';
             for (let i = 1; i <= tripData.days; i++) {
                 const date = new Date(tripData.startDate);
@@ -1193,7 +1153,6 @@
             }
             document.getElementById('daysSelector').innerHTML = tabsHTML;
 
-            // Show first day
             currentDay = 1;
             renderDayEditor();
         }
@@ -1201,7 +1160,6 @@
         function switchDay(day) {
             currentDay = day;
             
-            // Update active tab
             document.querySelectorAll('.day-tab').forEach((tab, index) => {
                 tab.classList.toggle('active', index + 1 === day);
             });
@@ -1242,7 +1200,7 @@
                         <div class="input-row">
                             <div>
                                 <label>Time</label>
-                                <input type="time" value="${activity.time || ''}" onchange="updateActivity(${index}, 'time', this.value)" placeholder="e.g., 9:00 AM">
+                                <input type="time" value="${activity.time || ''}" onchange="updateActivity(${index}, 'time', this.value)">
                             </div>
                             <div>
                                 <label>Activity</label>
@@ -1280,11 +1238,13 @@
             });
             
             renderDayEditor();
+            saveTripToFirebase();
         }
 
         function updateActivity(index, field, value) {
             if (itineraryData[currentDay] && itineraryData[currentDay][index]) {
                 itineraryData[currentDay][index][field] = value;
+                saveTripToFirebase();
             }
         }
 
@@ -1292,6 +1252,7 @@
             if (confirm('Delete this activity?')) {
                 itineraryData[currentDay].splice(index, 1);
                 renderDayEditor();
+                saveTripToFirebase();
             }
         }
 
@@ -1302,17 +1263,32 @@
         }
 
         function editItinerary() {
-            // Hide results, show builder
             document.getElementById('results').style.display = 'none';
             document.getElementById('builder').style.display = 'block';
             document.getElementById('builder').scrollIntoView({ behavior: 'smooth' });
-            
-            // Render current day to show existing data
             renderDayEditor();
         }
 
         function printItinerary() {
             window.print();
+        }
+
+        function editDay(day) {
+            currentDay = day;
+            editItinerary();
+        }
+
+        function editSpecificActivity(day, activityIndex) {
+            currentDay = day;
+            editItinerary();
+            
+            setTimeout(() => {
+                const activityCards = document.querySelectorAll('.activity-card');
+                if (activityCards[activityIndex]) {
+                    activityCards[activityIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    activityCards[activityIndex].style.animation = 'highlight 1s ease';
+                }
+            }, 500);
         }
 
         function generateFullItinerary() {
@@ -1347,7 +1323,6 @@
                     <h3>Your Custom Itinerary</h3>
             `;
 
-            // Generate each day
             for (let day = 1; day <= tripData.days; day++) {
                 const currentDate = new Date(tripData.startDate);
                 currentDate.setDate(currentDate.getDate() + day - 1);
@@ -1387,7 +1362,6 @@
                         }
                     });
                     
-                    // Add button to add more activities to this day
                     html += `
                         <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 2px dashed #e0e0e0;">
                             <button onclick="editDay(${day})" style="padding: 10px 20px; background: var(--secondary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">+ Add More Activities</button>
@@ -1406,34 +1380,18 @@
             document.getElementById('tripPlan').innerHTML = html;
         }
 
-        function editDay(day) {
-            // Switch to that specific day in the builder
-            currentDay = day;
-            editItinerary();
+        function loadMyTrips() {
+            alert('Feature coming soon: View all your saved trips!');
         }
 
-        function editSpecificActivity(day, activityIndex) {
-            // Switch to that specific day and scroll to that activity
-            currentDay = day;
-            editItinerary();
-            
-            // Scroll to the specific activity after a short delay
-            setTimeout(() => {
-                const activityCards = document.querySelectorAll('.activity-card');
-                if (activityCards[activityIndex]) {
-                    activityCards[activityIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    activityCards[activityIndex].style.animation = 'highlight 1s ease';
-                }
-            }, 500);
-        }
-
-        // Smooth scroll for navigation
         document.querySelectorAll('nav a').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (this.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
                 }
             });
         });
