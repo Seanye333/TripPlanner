@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Trip Planner">
     <title>Wanderly - Your Trip Planner</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
@@ -18,6 +21,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on iOS */
         }
 
         body {
@@ -25,6 +29,23 @@
             background: var(--light);
             color: var(--dark);
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Touch-friendly buttons */
+        button, .cta-button, .day-tab, .add-activity-btn, .edit-activity-btn {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            touch-action: manipulation; /* Improves tap response */
+            min-height: 44px; /* iOS recommended minimum touch target */
+        }
+
+        input, select, textarea {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
 
         /* Hero Section */
@@ -697,12 +718,161 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .hero h1 { font-size: 3.5rem; }
-            .hero p { font-size: 1.2rem; }
-            .section-title { font-size: 2.5rem; }
-            .form-row { grid-template-columns: 1fr; }
-            nav ul { gap: 20px; }
-            .input-row { grid-template-columns: 1fr; }
+            .hero h1 { 
+                font-size: 3rem; 
+                letter-spacing: -1px;
+            }
+            .hero p { 
+                font-size: 1.1rem; 
+                padding: 0 20px;
+            }
+            .section-title { 
+                font-size: 2rem; 
+                margin-bottom: 40px;
+            }
+            .form-row { 
+                grid-template-columns: 1fr; 
+            }
+            .input-row { 
+                grid-template-columns: 1fr; 
+            }
+            nav ul { 
+                gap: 15px; 
+                font-size: 0.9rem;
+            }
+            nav {
+                padding: 15px 20px;
+            }
+            .logo {
+                font-size: 1.5rem;
+            }
+            .features, .planner-section, .itinerary-builder, 
+            .trip-results, .destinations {
+                padding: 60px 20px;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            .feature-card {
+                padding: 30px 25px;
+            }
+            .feature-card h3 {
+                font-size: 1.5rem;
+            }
+            .destinations-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .destination-card {
+                height: 300px;
+            }
+            .cta-button {
+                padding: 15px 35px;
+                font-size: 1rem;
+            }
+            .trip-summary {
+                padding: 30px 20px;
+            }
+            .trip-summary h3 {
+                font-size: 2rem;
+            }
+            .trip-details {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .current-day-editor {
+                padding: 25px 15px;
+            }
+            .day-editor-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .day-editor-header h3 {
+                font-size: 1.8rem;
+            }
+            .add-activity-btn {
+                width: 100%;
+                padding: 12px 20px;
+            }
+            .activity-card {
+                padding: 20px 15px;
+            }
+            .delete-activity {
+                top: 10px;
+                right: 10px;
+            }
+            .days-selector {
+                gap: 10px;
+            }
+            .day-tab {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+            .day-card {
+                padding: 25px 15px;
+            }
+            .day-header h4 {
+                font-size: 1.5rem;
+            }
+            .activity-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                padding: 15px;
+            }
+            .activity-item .time {
+                min-width: auto;
+            }
+            .edit-activity-btn {
+                width: 100%;
+                margin-top: 10px;
+            }
+            .builder-actions {
+                flex-direction: column;
+            }
+            .builder-actions .cta-button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            .activity-inputs input,
+            .activity-inputs textarea {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+        }
+
+        /* iOS specific fixes */
+        @supports (-webkit-touch-callout: none) {
+            /* iOS Safari */
+            input, textarea, select {
+                font-size: 16px !important; /* Prevents auto-zoom */
+            }
+            .hero {
+                min-height: 100vh;
+                height: auto;
+            }
         }
 
         /* Print Styles */
