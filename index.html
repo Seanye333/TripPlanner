@@ -78,8 +78,7 @@
         [data-theme="dark"] .empty-state { color: #aaa; }
         [data-theme="dark"] .share-section { background: #1a2a3a; }
         [data-theme="dark"] .packing-item { background: var(--card-alt); color: #E8E8F8; }
-        [data-theme="dark"] .packing-category-group { border-color: var(--border-color); }
-        [data-theme="dark"] .packing-category-header { background: var(--card-alt); color: #E8E8F8; }
+        [data-theme="dark"] .packing-add-row input { background: var(--input-bg-solid); color: #E8E8F8; border-color: var(--border-color); }
         [data-theme="dark"] .day-notes-area { background: var(--card-alt); color: #E8E8F8; border-color: var(--border-color); }
         [data-theme="dark"] .preset-btn { background: var(--card-alt); color: #E8E8F8; border-color: var(--border-color); }
         [data-theme="dark"] .preset-btn:hover { background: var(--primary); color: white; }
@@ -316,32 +315,21 @@
 
         /* ===== PACKING LIST SECTION ===== */
         .packing-section { padding: 80px 50px; background: var(--section-alt); transition: background 0.3s; }
-        .packing-container { max-width: 1000px; margin: 0 auto; }
-        .packing-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
-        .packing-section .section-title { margin-bottom: 0; text-align: left; }
-        .packing-templates-row { display: flex; gap: 12px; flex-wrap: wrap; }
-        .template-btn { padding: 10px 20px; background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: all 0.3s; color: var(--dark); min-height: 44px; }
-        .template-btn:hover { background: var(--secondary); color: white; border-color: var(--secondary); transform: translateY(-2px); }
-        .packing-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 5px 20px var(--shadow); overflow: hidden; margin-bottom: 20px; transition: background 0.3s; }
-        .packing-category-header { padding: 18px 25px; background: var(--card-alt); font-weight: 700; font-size: 1.1rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: var(--dark); transition: background 0.3s; }
-        .packing-category-header:hover { background: var(--hover-bg); }
-        .packing-category-body { padding: 15px 25px 20px; }
-        .packing-items-list { display: grid; gap: 8px; margin-bottom: 15px; }
-        .packing-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; background: var(--card-alt); border-radius: 10px; transition: background 0.3s; }
-        .packing-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary); flex-shrink: 0; }
-        .packing-item label { cursor: pointer; font-size: 0.95rem; flex: 1; transition: all 0.3s; }
-        .packing-item.checked label { text-decoration: line-through; color: var(--text-muted); }
-        .packing-item .del-item { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.1rem; padding: 2px 6px; border-radius: 5px; transition: all 0.3s; min-height: unset; }
-        .packing-item .del-item:hover { color: #e74c3c; background: #FFE8E0; }
-        .packing-add-row { display: flex; gap: 10px; }
-        .packing-add-row input { flex: 1; padding: 10px 15px; border: 2px solid var(--border-color); border-radius: 10px; font-family: 'Outfit', sans-serif; font-size: 0.95rem; background: var(--input-bg-solid); color: var(--dark); }
+        .packing-container { max-width: 700px; margin: 0 auto; }
+        .packing-card { background: var(--card-bg); border-radius: 20px; padding: 35px; box-shadow: 0 5px 20px var(--shadow); transition: background 0.3s; }
+        .packing-add-row { display: flex; gap: 10px; margin-bottom: 25px; }
+        .packing-add-row input { flex: 1; padding: 14px 18px; border: 2px solid var(--border-color); border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 1rem; background: var(--input-bg-solid); color: var(--dark); transition: border-color 0.3s; }
         .packing-add-row input:focus { outline: none; border-color: var(--primary); }
-        .packing-add-row button { padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; transition: all 0.3s; min-height: 44px; }
-        .packing-add-row button:hover { background: #e55a25; }
-        .packing-progress { margin-top: 15px; }
-        .packing-progress .prog-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
-        .packing-progress .prog-track { background: var(--border-color); border-radius: 6px; height: 8px; overflow: hidden; }
-        .packing-progress .prog-fill { height: 100%; background: linear-gradient(90deg, #4CAF50, #8BC34A); border-radius: 6px; transition: width 0.4s ease; }
+        .packing-add-row button { padding: 14px 24px; background: var(--primary); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: all 0.3s; min-height: 44px; white-space: nowrap; }
+        .packing-add-row button:hover { background: #e55a25; transform: translateY(-2px); }
+        .packing-items-list { display: grid; gap: 10px; }
+        .packing-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: var(--card-alt); border-radius: 12px; transition: all 0.2s; }
+        .packing-item:hover { box-shadow: 0 2px 8px var(--shadow); }
+        .packing-item input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--primary); flex-shrink: 0; }
+        .packing-item label { cursor: pointer; font-size: 1rem; flex: 1; transition: all 0.3s; }
+        .packing-item.checked label { text-decoration: line-through; color: var(--text-muted); }
+        .packing-item .del-item { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.2rem; padding: 2px 6px; border-radius: 6px; transition: all 0.2s; min-height: unset; line-height: 1; }
+        .packing-item .del-item:hover { color: #e74c3c; background: #FFE8E0; }
 
         /* ===== MY TRIPS MODAL ===== */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center; }
@@ -620,22 +608,19 @@
     <!-- Packing List Section -->
     <section class="packing-section" id="packingSection" style="display: none;">
         <div class="packing-container">
-            <div class="packing-header">
-                <h2 class="section-title" style="font-size: 2.5rem; margin-bottom: 0;">🧳 Packing List</h2>
-                <div>
-                    <p style="margin-bottom: 12px; font-weight: 600; color: var(--text-muted);">Load a template:</p>
-                    <div class="packing-templates-row">
-                        <button class="template-btn" onclick="loadPackingTemplate('beach')">🏖️ Beach</button>
-                        <button class="template-btn" onclick="loadPackingTemplate('city')">🏙️ City</button>
-                        <button class="template-btn" onclick="loadPackingTemplate('adventure')">🏔️ Adventure</button>
-                        <button class="template-btn" onclick="loadPackingTemplate('winter')">❄️ Winter</button>
-                        <button class="template-btn" onclick="clearPackingList()" style="color: #e74c3c; border-color: #e74c3c;">🗑️ Clear All</button>
-                    </div>
-                </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px; flex-wrap:wrap; gap:10px;">
+                <h2 style="font-family:'Playfair Display',serif; font-size:2.5rem; color:var(--secondary);">🧳 Packing List</h2>
+                <span id="packingProgress" style="font-weight:700; color:var(--primary); font-size:1.05rem;"></span>
             </div>
-            <div id="packingListContainer"></div>
-            <div style="text-align: center; margin-top: 20px;">
-                <button class="template-btn" onclick="addPackingCategory()" style="padding: 12px 25px; font-size: 1rem;">+ Add Category</button>
+            <div class="packing-card">
+                <div class="packing-add-row">
+                    <input type="text" id="packingInput" placeholder="Add an item (e.g. Passport, Sunscreen, Camera...)" onkeypress="if(event.key==='Enter') addPackingItem()">
+                    <button onclick="addPackingItem()">+ Add</button>
+                </div>
+                <div class="packing-items-list" id="packingItemsList"></div>
+                <div id="packingClearRow" style="display:none; text-align:right; margin-top:20px; padding-top:15px; border-top:2px dashed var(--border-color);">
+                    <button onclick="clearPackingList()" style="padding:8px 18px; background:none; border:2px solid #e74c3c; color:#e74c3c; border-radius:10px; cursor:pointer; font-weight:600; font-size:0.9rem; min-height:unset; transition:all 0.2s;" onmouseover="this.style.background='#e74c3c';this.style.color='white'" onmouseout="this.style.background='none';this.style.color='#e74c3c'">🗑️ Clear All</button>
+                </div>
             </div>
         </div>
     </section>
@@ -711,44 +696,6 @@
             { icon: '🏨', label: 'Check-in',     time: '14:00', activity: 'Hotel Check-in',     category: 'accommodation', duration: '30 min' }
         ];
 
-        const PACKING_TEMPLATES = {
-            beach: {
-                name: '🏖️ Beach Trip',
-                categories: {
-                    'Essentials': ['Passport / ID', 'Travel insurance docs', 'Phone & charger', 'Wallet & cash', 'Flight tickets'],
-                    'Clothing':   ['Swimwear (x2)', 'Light summer clothes', 'Sun hat', 'Flip flops', 'Sunglasses', 'Cover-up'],
-                    'Beach Gear': ['Sunscreen SPF 50+', 'Beach towel', 'Snorkeling gear', 'Waterproof phone case'],
-                    'Toiletries': ['Toothbrush & toothpaste', 'Shampoo & conditioner', 'Deodorant', 'After-sun lotion', 'Lip balm with SPF']
-                }
-            },
-            city: {
-                name: '🏙️ City Break',
-                categories: {
-                    'Essentials':    ['Passport / ID', 'Travel insurance docs', 'Phone & charger', 'Wallet & cash', 'Transit card'],
-                    'Clothing':      ['Comfortable walking shoes', 'Light jacket', 'Smart casual outfits (x3)', 'One dressy outfit'],
-                    'Tech & Extras': ['Camera', 'Portable power bank', 'Earphones', 'Travel adapter', 'Small day bag'],
-                    'Toiletries':    ['Toothbrush & toothpaste', 'Shampoo & conditioner', 'Deodorant', 'Face wash', 'Moisturizer']
-                }
-            },
-            adventure: {
-                name: '🏔️ Adventure',
-                categories: {
-                    'Essentials': ['Passport / ID', 'Travel insurance (adventure coverage)', 'Phone & charger', 'First aid kit', 'Emergency contacts list'],
-                    'Clothing':   ['Hiking boots', 'Moisture-wicking shirts (x3)', 'Hiking pants', 'Rain jacket', 'Warm base layers', 'Wool socks (x3)'],
-                    'Gear':       ['Backpack (30-50L)', 'Water bottle / hydration pack', 'Headlamp & batteries', 'Sunscreen', 'Insect repellent', 'Trekking poles'],
-                    'Toiletries': ['Toothbrush & toothpaste', 'Biodegradable soap', 'Deodorant', 'Toilet paper']
-                }
-            },
-            winter: {
-                name: '❄️ Winter Trip',
-                categories: {
-                    'Essentials': ['Passport / ID', 'Travel insurance docs', 'Phone & charger', 'Wallet & cash'],
-                    'Clothing':   ['Heavy winter coat', 'Thermal underwear (x2)', 'Wool sweaters (x2)', 'Waterproof boots', 'Warm gloves', 'Wool scarf', 'Beanie', 'Warm socks (x4)'],
-                    'Extras':     ['Hand warmers', 'Lip balm', 'Sunglasses for snow glare', 'Snow goggles (if skiing)'],
-                    'Toiletries': ['Toothbrush & toothpaste', 'Shampoo', 'Deodorant', 'Rich moisturizer', 'Lip balm']
-                }
-            }
-        };
 
         // ===========================================
         // GLOBAL VARIABLES
@@ -757,7 +704,7 @@
         let currentDay   = 1;
         let itineraryData = {};
         let dayNotes     = {};
-        let packingData  = {};       // { categoryName: [{ id, text, checked }] }
+        let packingData  = [];       // [{ id, text, checked }]
         let currentTripId = null;
         let unsubscribe   = null;
 
@@ -825,7 +772,7 @@
                     tripData      = data.tripData      || tripData;
                     itineraryData = data.itineraryData || itineraryData;
                     dayNotes      = data.dayNotes      || dayNotes;
-                    packingData   = data.packingData   || packingData;
+                    packingData   = Array.isArray(data.packingData) ? data.packingData : [];
                     renderDayEditor();
                     renderPackingList();
                     updateBudgetPanel();
@@ -844,7 +791,7 @@
                     tripData      = data.tripData      || {};
                     itineraryData = data.itineraryData || {};
                     dayNotes      = data.dayNotes      || {};
-                    packingData   = data.packingData   || {};
+                    packingData   = Array.isArray(data.packingData) ? data.packingData : [];
                     currentTripId = tripId;
                     initializeBuilder();
                     document.getElementById('builder').style.display        = 'block';
@@ -943,7 +890,7 @@
             tripData = { destination, startDate, endDate, days, travelers, budget, notes };
             itineraryData = {};
             dayNotes = {};
-            packingData = {};
+            packingData = [];
 
             for (let i = 1; i <= days; i++) itineraryData[i] = [];
 
@@ -1357,119 +1304,60 @@
         // ===========================================
         // PACKING LIST
         // ===========================================
-        function loadPackingTemplate(templateKey) {
-            const tmpl = PACKING_TEMPLATES[templateKey];
-            if (!tmpl) return;
-            if (Object.keys(packingData).length > 0) {
-                if (!confirm(`Load the "${tmpl.name}" template? This will replace your current packing list.`)) return;
-            }
-            packingData = {};
-            Object.entries(tmpl.categories).forEach(([catName, items]) => {
-                packingData[catName] = items.map((text, i) => ({ id: `${catName}-${i}-${Date.now()}`, text, checked: false }));
-            });
+        function addPackingItem() {
+            const input = document.getElementById('packingInput');
+            if (!input || !input.value.trim()) return;
+            packingData.push({ id: 'p-' + Date.now(), text: input.value.trim(), checked: false });
+            input.value = '';
+            input.focus();
+            renderPackingList();
+            saveTripToFirebase();
+        }
+
+        function togglePackingItem(itemId) {
+            const item = packingData.find(i => i.id === itemId);
+            if (item) item.checked = !item.checked;
+            renderPackingList();
+            saveTripToFirebase();
+        }
+
+        function deletePackingItem(itemId) {
+            packingData = packingData.filter(i => i.id !== itemId);
             renderPackingList();
             saveTripToFirebase();
         }
 
         function clearPackingList() {
             if (!confirm('Clear the entire packing list?')) return;
-            packingData = {};
-            renderPackingList();
-            saveTripToFirebase();
-        }
-
-        function addPackingCategory() {
-            const name = prompt('Category name (e.g. "Medications", "Entertainment"):');
-            if (!name || !name.trim()) return;
-            if (!packingData[name.trim()]) packingData[name.trim()] = [];
-            renderPackingList();
-            saveTripToFirebase();
-        }
-
-        function togglePackingItem(catName, itemId) {
-            const cat = packingData[catName];
-            if (!cat) return;
-            const item = cat.find(i => i.id === itemId);
-            if (item) item.checked = !item.checked;
-            renderPackingList();
-            saveTripToFirebase();
-        }
-
-        function deletePackingItem(catName, itemId) {
-            if (!packingData[catName]) return;
-            packingData[catName] = packingData[catName].filter(i => i.id !== itemId);
-            if (packingData[catName].length === 0) delete packingData[catName];
-            renderPackingList();
-            saveTripToFirebase();
-        }
-
-        function addPackingItem(catName) {
-            const input = document.getElementById(`add-item-${CSS.escape(catName)}`);
-            if (!input || !input.value.trim()) return;
-            if (!packingData[catName]) packingData[catName] = [];
-            packingData[catName].push({ id: `${catName}-${Date.now()}`, text: input.value.trim(), checked: false });
-            input.value = '';
-            renderPackingList();
-            saveTripToFirebase();
-        }
-
-        function deletePackingCategory(catName) {
-            if (!confirm(`Delete category "${catName}" and all its items?`)) return;
-            delete packingData[catName];
+            packingData = [];
             renderPackingList();
             saveTripToFirebase();
         }
 
         function renderPackingList() {
-            const container = document.getElementById('packingListContainer');
-            if (!container) return;
+            const listEl    = document.getElementById('packingItemsList');
+            const progressEl = document.getElementById('packingProgress');
+            const clearRow  = document.getElementById('packingClearRow');
+            if (!listEl) return;
 
-            const categories = Object.keys(packingData);
-            if (categories.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align:center;padding:50px 20px;color:var(--text-muted);">
-                        <p style="font-size:1.1rem;margin-bottom:15px;">No packing list yet.</p>
-                        <p>Load a template above or add a custom category.</p>
-                    </div>
-                `;
+            const total   = packingData.length;
+            const checked = packingData.filter(i => i.checked).length;
+
+            if (progressEl) progressEl.textContent = total > 0 ? `${checked} / ${total} packed` : '';
+            if (clearRow)   clearRow.style.display  = total > 0 ? 'block' : 'none';
+
+            if (total === 0) {
+                listEl.innerHTML = `<p style="text-align:center;color:var(--text-muted);padding:20px 0 10px;">No items yet — type something above and press Enter!</p>`;
                 return;
             }
 
-            container.innerHTML = categories.map(catName => {
-                const items = packingData[catName] || [];
-                const checkedCount = items.filter(i => i.checked).length;
-                const pct = items.length > 0 ? Math.round((checkedCount / items.length) * 100) : 0;
-                const catId = catName.replace(/[^a-z0-9]/gi, '_');
-
-                const itemsHTML = items.map(item => `
-                    <div class="packing-item ${item.checked ? 'checked' : ''}" id="pi-${item.id}">
-                        <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="togglePackingItem(${JSON.stringify(catName)}, ${JSON.stringify(item.id)})">
-                        <label onclick="togglePackingItem(${JSON.stringify(catName)}, ${JSON.stringify(item.id)})">${escHtml(item.text)}</label>
-                        <button class="del-item" onclick="deletePackingItem(${JSON.stringify(catName)}, ${JSON.stringify(item.id)})" title="Remove">×</button>
-                    </div>
-                `).join('');
-
-                return `
-                    <div class="packing-card">
-                        <div class="packing-category-header">
-                            <span>${escHtml(catName)} (${checkedCount}/${items.length})</span>
-                            <button onclick="deletePackingCategory(${JSON.stringify(catName)})" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:1.1rem;min-height:unset;" title="Delete category">🗑️</button>
-                        </div>
-                        <div class="packing-category-body">
-                            <div class="packing-items-list">${itemsHTML}</div>
-                            <div class="packing-add-row">
-                                <input type="text" id="add-item-${catId}" placeholder="Add item..." onkeypress="if(event.key==='Enter') addPackingItem(${JSON.stringify(catName)})">
-                                <button onclick="addPackingItem(${JSON.stringify(catName)})">+ Add</button>
-                            </div>
-                            ${items.length > 0 ? `
-                            <div class="packing-progress" style="margin-top:12px;">
-                                <div class="prog-label">${pct}% packed</div>
-                                <div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div>
-                            </div>` : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('');
+            listEl.innerHTML = packingData.map(item => `
+                <div class="packing-item ${item.checked ? 'checked' : ''}">
+                    <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="togglePackingItem(${JSON.stringify(item.id)})">
+                    <label onclick="togglePackingItem(${JSON.stringify(item.id)})">${escHtml(item.text)}</label>
+                    <button class="del-item" onclick="deletePackingItem(${JSON.stringify(item.id)})" title="Remove">×</button>
+                </div>
+            `).join('');
         }
 
         // ===========================================
