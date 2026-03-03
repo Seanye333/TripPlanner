@@ -73,8 +73,7 @@
         [data-theme="dark"] .day-tab { background: var(--card-bg); border-color: var(--border-color); color: #E8E8F8; }
         [data-theme="dark"] .day-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
         [data-theme="dark"] .itinerary-builder,
-        [data-theme="dark"] .trip-results,
-        [data-theme="dark"] .packing-section { background: #0F0F1A; }
+        [data-theme="dark"] .trip-results { background: #0F0F1A; }
         [data-theme="dark"] .empty-state { color: #aaa; }
         [data-theme="dark"] .share-section { background: #1a2a3a; }
         [data-theme="dark"] .packing-item { background: var(--card-alt); color: #E8E8F8; }
@@ -313,9 +312,7 @@
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
         .empty-state h4 { font-size: 1.5rem; margin-bottom: 10px; }
 
-        /* ===== PACKING LIST SECTION ===== */
-        .packing-section { padding: 80px 50px; background: var(--section-alt); transition: background 0.3s; }
-        .packing-container { max-width: 700px; margin: 0 auto; }
+        /* ===== PACKING LIST ===== */
         .packing-card { background: var(--card-bg); border-radius: 20px; padding: 35px; box-shadow: 0 5px 20px var(--shadow); transition: background 0.3s; }
         .packing-add-row { display: flex; gap: 10px; margin-bottom: 25px; }
         .packing-add-row input { flex: 1; padding: 14px 18px; border: 2px solid var(--border-color); border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 1rem; background: var(--input-bg-solid); color: var(--dark); transition: border-color 0.3s; }
@@ -389,7 +386,7 @@
             nav ul { gap: 12px; font-size: 0.85rem; }
             nav { padding: 15px 20px; }
             .logo { font-size: 1.5rem; }
-            .planner-section, .itinerary-builder, .trip-results, .packing-section { padding: 60px 20px; }
+            .planner-section, .itinerary-builder, .trip-results { padding: 60px 20px; }
             .trip-summary { padding: 30px 20px; }
             .trip-summary h3 { font-size: 2rem; }
             .trip-details { grid-template-columns: 1fr; gap: 15px; }
@@ -410,8 +407,6 @@
             .share-link { flex-direction: column; }
             .share-link input { min-width: 100%; }
             .budget-grid { grid-template-columns: 1fr 1fr; }
-            .packing-header { flex-direction: column; align-items: flex-start; }
-            .packing-section .section-title { margin-bottom: 15px; }
         }
 
         @media (max-width: 480px) {
@@ -431,7 +426,7 @@
 
         @media print {
             nav, .hero, .planner-section, .itinerary-builder,
-            .packing-section, footer, .cta-button, .builder-actions,
+            footer, .cta-button, .builder-actions,
             .share-section, .sync-status, .modal-overlay { display: none !important; }
             .trip-results { padding: 20px !important; }
             .section-title { color: black !important; }
@@ -596,23 +591,12 @@
                 </div>
             </div>
 
-            <div class="builder-actions">
-                <button class="cta-button" onclick="viewFullItinerary()">View Full Itinerary 👀</button>
-                <button class="cta-button" onclick="document.getElementById('planner').scrollIntoView({behavior: 'smooth'})" style="background: #95a5a6;">
-                    Start Over
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Packing List Section -->
-    <section class="packing-section" id="packingSection" style="display: none;">
-        <div class="packing-container">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px; flex-wrap:wrap; gap:10px;">
-                <h2 style="font-family:'Playfair Display',serif; font-size:2.5rem; color:var(--secondary);">🧳 Packing List</h2>
-                <span id="packingProgress" style="font-weight:700; color:var(--primary); font-size:1.05rem;"></span>
-            </div>
-            <div class="packing-card">
+            <!-- Packing List (inline, part of the trip builder) -->
+            <div class="packing-card" style="margin-bottom: 30px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+                    <h3 style="font-family:'Playfair Display',serif; font-size:1.8rem; color:var(--secondary);">🧳 Packing List</h3>
+                    <span id="packingProgress" style="font-weight:700; color:var(--primary); font-size:1rem;"></span>
+                </div>
                 <div class="packing-add-row">
                     <input type="text" id="packingInput" placeholder="Add an item (e.g. Passport, Sunscreen, Camera...)" onkeypress="if(event.key==='Enter') addPackingItem()">
                     <button onclick="addPackingItem()">+ Add</button>
@@ -621,6 +605,13 @@
                 <div id="packingClearRow" style="display:none; text-align:right; margin-top:20px; padding-top:15px; border-top:2px dashed var(--border-color);">
                     <button onclick="clearPackingList()" style="padding:8px 18px; background:none; border:2px solid #e74c3c; color:#e74c3c; border-radius:10px; cursor:pointer; font-weight:600; font-size:0.9rem; min-height:unset; transition:all 0.2s;" onmouseover="this.style.background='#e74c3c';this.style.color='white'" onmouseout="this.style.background='none';this.style.color='#e74c3c'">🗑️ Clear All</button>
                 </div>
+            </div>
+
+            <div class="builder-actions">
+                <button class="cta-button" onclick="viewFullItinerary()">View Full Itinerary 👀</button>
+                <button class="cta-button" onclick="document.getElementById('planner').scrollIntoView({behavior: 'smooth'})" style="background: #95a5a6;">
+                    Start Over
+                </button>
             </div>
         </div>
     </section>
@@ -794,8 +785,7 @@
                     packingData   = Array.isArray(data.packingData) ? data.packingData : [];
                     currentTripId = tripId;
                     initializeBuilder();
-                    document.getElementById('builder').style.display        = 'block';
-                    document.getElementById('packingSection').style.display = 'block';
+                    document.getElementById('builder').style.display = 'block';
                     document.getElementById('builder').scrollIntoView({ behavior: 'smooth' });
                     listenToTripChanges();
                 } else {
@@ -898,8 +888,7 @@
             saveTripToFirebase();
             listenToTripChanges();
 
-            document.getElementById('builder').style.display        = 'block';
-            document.getElementById('packingSection').style.display = 'block';
+            document.getElementById('builder').style.display = 'block';
             document.getElementById('builder').scrollIntoView({ behavior: 'smooth' });
         });
 
