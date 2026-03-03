@@ -503,7 +503,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="startDate">Start Date</label>
-                        <input type="date" id="startDate" required>
+                        <input type="date" id="startDate" required onchange="onStartDateChange()">
                     </div>
                     <div class="form-group">
                         <label for="endDate">End Date</label>
@@ -891,6 +891,35 @@
         });
 
         // ===========================================
+        // DATE HELPERS
+        // ===========================================
+        // Parse a YYYY-MM-DD string as LOCAL midnight (avoids timezone-shift bug)
+        function parseLocalDate(str) {
+            const [y, m, d] = str.split('-').map(Number);
+            return new Date(y, m - 1, d);
+        }
+
+        // Set min date on startDate to today, and wire up endDate min
+        (function initDateInputs() {
+            const today = new Date();
+            const yyyy  = today.getFullYear();
+            const mm    = String(today.getMonth() + 1).padStart(2, '0');
+            const dd    = String(today.getDate()).padStart(2, '0');
+            const todayStr = `${yyyy}-${mm}-${dd}`;
+            document.getElementById('startDate').min = todayStr;
+        })();
+
+        function onStartDateChange() {
+            const startVal = document.getElementById('startDate').value;
+            const endEl    = document.getElementById('endDate');
+            endEl.min = startVal;
+            // Clear end date if it's now before start date
+            if (endEl.value && endEl.value < startVal) {
+                endEl.value = '';
+            }
+        }
+
+        // ===========================================
         // FORM SUBMIT
         // ===========================================
         document.getElementById('tripForm').addEventListener('submit', function(e) {
@@ -902,8 +931,13 @@
             const budget      = document.getElementById('budget').value;
             const notes       = document.getElementById('notes').value;
 
-            const start = new Date(startDate);
-            const end   = new Date(endDate);
+            if (endDate < startDate) {
+                alert('End date must be on or after the start date.');
+                return;
+            }
+
+            const start = parseLocalDate(startDate);
+            const end   = parseLocalDate(endDate);
             const days  = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
 
             tripData = { destination, startDate, endDate, days, travelers, budget, notes };
@@ -930,7 +964,7 @@
 
             document.getElementById('tripSummarySmall').innerHTML = `
                 <h3>📍 ${tripData.destination}</h3>
-                <p>${new Date(tripData.startDate).toLocaleDateString()} – ${new Date(tripData.endDate).toLocaleDateString()}
+                <p>${parseLocalDate(tripData.startDate).toLocaleDateString()} – ${parseLocalDate(tripData.endDate).toLocaleDateString()}
                 &nbsp;|&nbsp; ${tripData.days} day${tripData.days > 1 ? 's' : ''}
                 &nbsp;|&nbsp; ${tripData.travelers} travelers
                 &nbsp;|&nbsp; ${budgetLabels[tripData.budget] || tripData.budget}</p>
@@ -938,7 +972,7 @@
 
             let tabsHTML = '';
             for (let i = 1; i <= tripData.days; i++) {
-                const date = new Date(tripData.startDate);
+                const date = parseLocalDate(tripData.startDate);
                 date.setDate(date.getDate() + i - 1);
                 const count = (itineraryData[i] || []).filter(a => a.activity).length;
                 tabsHTML += `
@@ -982,7 +1016,7 @@
         }
 
         function renderDayEditor() {
-            const date = new Date(tripData.startDate);
+            const date = parseLocalDate(tripData.startDate);
             date.setDate(date.getDate() + currentDay - 1);
 
             document.getElementById('currentDayTitle').textContent =
@@ -1241,7 +1275,7 @@
                 <div class="trip-summary">
                     <h3>📍 ${escHtml(tripData.destination)}</h3>
                     <div class="trip-details">
-                        <div class="detail-item"><strong>📅 Dates:</strong> ${new Date(tripData.startDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })} – ${new Date(tripData.endDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
+                        <div class="detail-item"><strong>📅 Dates:</strong> ${parseLocalDate(tripData.startDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })} – ${parseLocalDate(tripData.endDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
                         <div class="detail-item"><strong>⏱️ Duration:</strong> ${tripData.days} day${tripData.days > 1 ? 's' : ''}</div>
                         <div class="detail-item"><strong>👥 Travelers:</strong> ${tripData.travelers}</div>
                         <div class="detail-item"><strong>💰 Budget:</strong> ${budgetLabels[tripData.budget] || tripData.budget}</div>
@@ -1254,7 +1288,7 @@
             `;
 
             for (let day = 1; day <= tripData.days; day++) {
-                const currentDate = new Date(tripData.startDate);
+                const currentDate = parseLocalDate(tripData.startDate);
                 currentDate.setDate(currentDate.getDate() + day - 1);
                 const activities = itineraryData[day] || [];
                 const dayCost = calculateDayBudget(day);
@@ -1466,8 +1500,8 @@
                 listEl.innerHTML = `<div class="no-trips-msg">🗺️<br>No saved trips yet.<br>Create a trip to see it here!</div>`;
             } else {
                 listEl.innerHTML = trips.map(t => {
-                    const start = t.startDate ? new Date(t.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
-                    const end   = t.endDate   ? new Date(t.endDate).toLocaleDateString('en-US',   { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+                    const start = t.startDate ? parseLocalDate(t.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+                    const end   = t.endDate   ? parseLocalDate(t.endDate).toLocaleDateString('en-US',   { month: 'short', day: 'numeric', year: 'numeric' }) : '';
                     return `
                         <div class="trip-list-item">
                             <div class="trip-list-info">
